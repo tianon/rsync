@@ -726,7 +726,7 @@ static int rsync_module(int f_in, int f_out, int i, const char *addr, const char
 	if (!allow_access(addr, &host, i)) {
 		rprintf(FLOG, "rsync denied on module %s from %s (%s)\n",
 			name, host, addr);
-		if (!lp_list(i))
+		if (1 || !lp_list(i)) // TODO configurable list hiding
 			io_printf(f_out, "@ERROR: Unknown module '%s'\n", name);
 		else {
 			io_printf(f_out,
