@@ -1244,13 +1244,13 @@ BOOL namecvt_call(const char *cmd, const char **name_p, id_t *id_p)
 
 /* send a list of available modules to the client. Don't list those
    with "list = False". */
-static void send_listing(int fd)
+static void send_listing(int fd, const char *addr, const char *host)
 {
 	int n = lp_num_modules();
 	int i;
 
 	for (i = 0; i < n; i++) {
-		if (lp_list(i))
+		if (lp_list(i) && allow_access(addr, &host, i))
 			io_printf(fd, "%-15s\t%s\n", lp_name(i), lp_comment(i));
 	}
 
@@ -1370,7 +1370,7 @@ int start_daemon(int f_in, int f_out)
 	if (!*line || strcmp(line, "#list") == 0) {
 		rprintf(FLOG, "module-list request from %s (%s)\n",
 			host, addr);
-		send_listing(f_out);
+		send_listing(f_out, addr, host);
 		return -1;
 	}
 
