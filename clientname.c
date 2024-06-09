@@ -424,6 +424,13 @@ static int compare_addrinfo_sockaddr(const struct addrinfo *ai, const struct soc
  **/
 static int check_name(const char *ipaddr, const struct sockaddr_storage *ss, char *name_buf, size_t name_buf_size)
 {
+	// TIANON
+	// I enable "reverse lookup" *only* for cuter logs -- not for "hosts allow" or "hosts deny" -- so disabling this reverse lookup forward lookup check is ~sane.
+	rprintf(FLOG, "warning: %s might be a spoofed reverse name for %s -- Tianon has (intentionally) patched out the check!\n",
+		name_buf, ipaddr);
+	return 0;
+	// TIANON
+
 	struct addrinfo hints, *res, *res0;
 	int error;
 	int ss_family = GET_SOCKADDR_FAMILY(ss);
